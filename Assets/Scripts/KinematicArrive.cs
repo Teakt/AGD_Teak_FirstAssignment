@@ -7,8 +7,15 @@ public class KinematicArrive : MonoBehaviour
 
     public float ViewRadius = 30f;
     [Range(10,60)]
-    public float viewAngle;
+    public float viewAngle ;
 
+    public LayerMask targetMask;
+    public LayerMask obstacleMask;
+
+    [HideInInspector]
+    public List<Transform> visibleTargets = new List<Transform>();
+
+    
     
 
 
@@ -45,7 +52,8 @@ public class KinematicArrive : MonoBehaviour
     void Start()
     {
         target_transform = target.transform;
-        speed_Limit = m_maxVelocity / 2;
+        speed_Limit = m_maxVelocity / 4;
+        //StartCoroutine("FindTargetWithDelay", .3f);
     }
 
     // Update is called once per frame
@@ -54,8 +62,7 @@ public class KinematicArrive : MonoBehaviour
         // Determine which direction to rotate towards
         Vector3 targetDirection = target_transform.position - transform.position;
 
-        // The ViewAngle depends of the velocity
-        viewAngle = viewAngle * _velocity;
+        
         
 
 
@@ -99,7 +106,8 @@ public class KinematicArrive : MonoBehaviour
         distanceFromTarget = (target.transform.position - transform.position).magnitude;
 
 
-        if (_velocity < speed_Limit ) // A
+        //if (_velocity < speed_Limit || _velocity == 0 ) // A
+        if (_velocity > m_maxVelocity)
         {
             
 
@@ -124,12 +132,12 @@ public class KinematicArrive : MonoBehaviour
                     Debug.DrawRay(transform.position, newDirection, Color.blue);
 
                     transform.rotation = Quaternion.LookRotation(newDirection);
-                    Debug.Log("Rota y " + System.Math.Round(transform.rotation.y,2) + " and " + System.Math.Round(Quaternion.LookRotation(target.transform.position - transform.position).y,2));
+                    //Debug.Log("Rota y " + System.Math.Round(transform.rotation.y,2) + " and " + System.Math.Round(Quaternion.LookRotation(target.transform.position - transform.position).y,2));
                 }
                 else
                 {
                     Debug.Log("Outside Near Radius " + distanceFromTarget + " Velocity " + speed);
-                    transform.position += transform.forward * Time.deltaTime * speed;
+                    transform.position += transform.forward * Time.deltaTime * m_maxVelocity;
                 }
                 
 
@@ -151,7 +159,24 @@ public class KinematicArrive : MonoBehaviour
         else // B 
         {
             Debug.Log("BOUGE PLUS" + _velocity);
-            _velocity = 0;
+            _velocity = speed_Limit - 1 ;
+            Transform target = target_transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2) // Inside of viewAgnle
+            {
+                float distFromTarget = Vector3.Distance(transform.position, target.position);
+                Debug.Log("INSIDE of VIewAngle");
+                if (!Physics.Raycast(transform.position, dirToTarget, distFromTarget, obstacleMask)) // Add all targets to list
+                {
+
+                    visibleTargets.Add(target);
+                }
+
+            }
+            else // Outside of viewAngle
+            {
+                Debug.Log("Outside of VIewAngle");
+            }
         }
 
     }
@@ -165,4 +190,43 @@ public class KinematicArrive : MonoBehaviour
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad),0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad)); 
     }
+
+    /*
+    void FindVisibleTargets()
+    {
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, ViewRadius, targetMask);
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        {
+            Transform target = targetsInViewRadius[i].transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2) // Inside of viewAgnle
+            {
+                float distFromTarget = Vector3.Distance(transform.position, target.position);
+                Debug.Log("INSIDE of VIewAngle");
+                if (!Physics.Raycast(transform.position, dirToTarget, distFromTarget, obstacleMask)) // Add all targets to list
+                {
+                    
+                    visibleTargets.Add(target);
+                }
+               
+            }
+            else // Outside of viewAngle
+            {
+                Debug.Log("Outside of VIewAngle");
+            }
+        }
+
+    }
+
+    IEnumerator FindTargetWithDelay(float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            FindVisibleTargets();
+        }
+    }
+
+    */
 }
