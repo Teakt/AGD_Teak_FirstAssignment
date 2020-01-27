@@ -56,10 +56,10 @@ public class PlayerInput : MonoBehaviour
         leftBorder = (-bounds.size.x) / 2 ; 
         topBorder = bounds.size.z / 2  ;
         botBorder = (-bounds.size.z) / 2  ;
-        Debug.Log("" + rightBorder);
-        Debug.Log("" + bounds.size.x * floor.transform.localScale.x);
-        Debug.Log("Vertical" + topBorder);
-        Debug.Log("" + bounds.size.z * floor.transform.localScale.z);
+        //Debug.Log("" + rightBorder);
+        //Debug.Log("" + bounds.size.x * floor.transform.localScale.x);
+        //Debug.Log("Vertical" + topBorder);
+        //Debug.Log("" + bounds.size.z * floor.transform.localScale.z);
     }
 
     void Update ()
@@ -121,8 +121,8 @@ public class PlayerInput : MonoBehaviour
         Vector3 floorLim = floor.transform.position; // same for our floor
 
 
-        Debug.Log("Character x : " + perso.x);
-        Debug.Log("Character z: " + perso.z);
+        //Debug.Log("Character x : " + perso.x);
+        //Debug.Log("Character z: " + perso.z);
         if (perso.x > rightBorder) // when the character goes too far on the right
         {
             this.transform.position =  new Vector3(leftBorder,0,perso.z);
