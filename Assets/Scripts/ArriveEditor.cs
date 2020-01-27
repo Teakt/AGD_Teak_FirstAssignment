@@ -17,6 +17,13 @@ public class ArriveEditor : Editor
 
         Handles.DrawLine(ka.transform.position, ka.transform.position + viewAngleA * ka.ViewRadius);
         Handles.DrawLine(ka.transform.position, ka.transform.position + viewAngleB * ka.ViewRadius);
+
+
+        Handles.color = Color.green;
+        foreach(Transform visibleTarget in ka.visibleTargets)
+        {
+            Handles.DrawLine(ka.transform.position, visibleTarget.position);
+        }
     }
 
 }
