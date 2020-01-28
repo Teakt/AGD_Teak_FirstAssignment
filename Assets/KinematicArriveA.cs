@@ -46,7 +46,7 @@ public class KinematicArriveA : MonoBehaviour
             if (System.Math.Round(transform.rotation.y, 2) != System.Math.Round(Quaternion.LookRotation(target.transform.position - transform.position).y, 2))
             {
                 // The step size is equal to speed times frame time.
-                float singleStep = m_maxVelocity * Time.deltaTime;
+                float singleStep = lowVelocity * Time.deltaTime;
 
                 // Rotate the forward vector towards the target direction by one step
                 Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f);
