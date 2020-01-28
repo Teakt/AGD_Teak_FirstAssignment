@@ -66,13 +66,13 @@ public class KinematicC : MonoBehaviour
         else if ((target.transform.position - transform.position).magnitude > arrivalRadius) // Close to target CHECK A.i.
         {
             //Debug.Log("Inside Near Radius " + distanceFromTarget + " Velocity " + this.GetComponent<Rigidbody>().velocity.normalized.magnitude);
-            transform.position += -(targetDirection) + new Vector3(5,0,0) * Time.deltaTime * m_maxVelocity;
+            transform.position += -(targetDirection)  * Time.deltaTime * m_maxVelocity;
         }
         else
         {
             //Debug.Log("Inside Arrive Radius " + distanceFromTarget + " Velocity " + this.GetComponent<Rigidbody>().velocity.normalized.magnitude);
 
-            transform.position += transform.forward * Time.deltaTime * m_maxVelocity;
+            transform.position += -(targetDirection) * Time.deltaTime * m_maxVelocity;
 
         }
     }
